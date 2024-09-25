@@ -1,0 +1,56 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Занимает всю высоту экрана */
+    margin: 0; /* Убирает отступы по умолчанию */
+    background-color: #f0f0f0; /* Цвет фона страницы */
+}
+
+#menu {
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон */
+    border: 2px solid #ccc; /* Обводка */
+    border-radius: 20px; /* Закругленные углы */
+    padding: 20px; /* Отступы внутри меню */
+    text-align: center; /* Центрирование текста */
+}
+
+h1 {
+    margin-bottom: 20px; /* Отступ снизу заголовка */
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение полей ввода */
+    align-items: center; /* Центрирование полей ввода по горизонтали */
+}
+
+input {
+    width: 200px; /* Ширина текстовых полей */
+    padding: 10px; /* Отступы внутри текстовых полей */
+    margin: 10px 0; /* Отступы между текстовыми полями */
+    border: 1px solid #ccc; /* Обводка текстовых полей */
+    border-radius: 20px; /* Закругленные углы текстовых полей */
+    font-size: 1em; /* Размер шрифта */
+}
+
+input::placeholder {
+    color: #aaa; /* Цвет текста в placeholder */
+}
+
+button {
+    font-size: 1.5em; /* Размер шрифта, примерно как h2 */
+    border-radius: 20px; /* Закругленные углы кнопок */
+    padding: 10px 20px; /* Отступы внутри кнопок */
+    margin: 10px 0; /* Отступы между кнопками (только сверху и снизу) */
+    border: none; /* Убираем стандартную обводку кнопок */
+    background-color: #00c4ff; /* Цвет фона кнопок */
+    color: white; /* Цвет текста кнопок */
+    cursor: pointer; /* Указатель при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+    width: 200px; /* Фиксированная ширина кнопок */
+}
+
+button:hover {
+    background-color: #0074b3; /* Цвет фона кнопок при наведении */
+}
