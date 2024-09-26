@@ -8,6 +8,7 @@ body {
 }
 
 #menu {
+    width: 200px;
     background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон */
     border: 2px solid #ccc; /* Обводка */
     border-radius: 20px; /* Закругленные углы */
