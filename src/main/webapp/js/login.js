@@ -1,3 +1,5 @@
+
+let urlForRedirect;
 document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Предотвращаем стандартное поведение формы
 
@@ -11,16 +13,32 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     fetch(url, {
         method: 'GET'
     })
-        .then(response => response.text())
+        .then(response => {
+            urlForRedirect = response.url;
+             return response.text()
+        })
         .then(data => {
-            if (data.trim() === "Success") {
+            if (data.includes("Success")) {
                 // Сохраняем имя пользователя в localStorage
                 localStorage.setItem('username', username);
+                const currentDate = new Date().toLocaleString();
+                localStorage.setItem('loginTime', currentDate);
                 // Перенаправление на главную страницу
                 window.location.href = "index.html";
+            } else {
+                window.location.href = urlForRedirect;
             }
         })
         .catch(error => {
             console.error('Ошибка:', error);
         });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("Current URL: " + window.location.href);
+    const urlParams = new URLSearchParams(window.location.search);
+    const attempts = urlParams.get("attempts");
+
+    if (attempts !== null && attempts !== '0') {
+        document.getElementById('loginAttemptsMsg').innerText = "Incorrect login or password. Attempts left: " + attempts;
+    }
 });

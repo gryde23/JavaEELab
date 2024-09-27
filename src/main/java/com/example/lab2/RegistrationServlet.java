@@ -18,6 +18,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @WebServlet("/RegistrationServlet")
 public class RegistrationServlet extends HttpServlet {
@@ -34,7 +36,11 @@ public class RegistrationServlet extends HttpServlet {
         String hashedPassword = hashPassword(password);
         System.out.println(hashedPassword);
         addUserToXML(login, hashedPassword);
-        resp.sendRedirect("index.html");
+        // Получаем текущую дату и время
+        String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        // Передаем сообщение о успешной регистрации с текущей датой и временем через параметр запроса
+        resp.sendRedirect("index.html?message=Registration successful at " + currentDateTime);
     }
 
     private boolean checkUser(String login){

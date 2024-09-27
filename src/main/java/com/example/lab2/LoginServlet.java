@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -13,19 +14,40 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    private static final int MAX_ATTEMPTS = 3;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        if(validateUser(username, password)){
+        HttpSession session = req.getSession();
+        Integer attempts = (Integer) session.getAttribute("loginAttempts");
+        if (attempts == null) {
+            attempts = 0;
+        }
+
+        if (attempts >= MAX_ATTEMPTS) {
+            resp.sendRedirect("index.html?message=You are blocked due to too many failed login attempts.");
+            return;
+        }
+
+        if (validateUser(username, password)) {
+            // Сбросить счетчик при успешном входе
+            session.removeAttribute("loginAttempts");
             resp.getWriter().println("Success");
         } else {
-            resp.getWriter().println("Fail");
+            // Увеличиваем счетчик неудачных попыток
+            attempts++;
+            System.out.println("Attempt " + attempts);
+            session.setAttribute("loginAttempts", attempts);
+            resp.sendRedirect("login.html?attempts=" + attempts);
+
+//            if (attempts >= MAX_ATTEMPTS) {
+//                resp.sendRedirect("index.html?message=You are blocked due to too many failed login attempts.");
+//            }
         }
     }
 
