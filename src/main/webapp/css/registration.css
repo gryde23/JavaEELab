@@ -13,6 +13,7 @@ body {
     border-radius: 10px; /* Закругленные углы */
     padding: 20px; /* Отступы внутри меню */
     text-align: center; /* Центрирование текста */
+    position: relative;
 }
 
 h1 {
@@ -44,7 +45,7 @@ input::placeholder {
 
 button {
     font-size: 1.5em; /* Размер шрифта, примерно как h2 */
-    border-radius: 10px; /* Закругленные углы кнопок */
+    border-radius: 20px; /* Закругленные углы кнопок */
     padding: 10px 20px; /* Отступы внутри кнопок */
     margin: 10px 0; /* Отступы между кнопками (только сверху и снизу) */
     border: none; /* Убираем стандартную обводку кнопок */
@@ -54,7 +55,16 @@ button {
     transition: background-color 0.3s; /* Плавный переход цвета фона */
     width: 200px; /* Фиксированная ширина кнопок */
 }
-
+#backButton{
+    position: absolute; /* Позволяет позиционировать кнопку относительно контейнера */
+    top: 10px; /* Отступ сверху */
+    left: 10px; /* Отступ слева */
+    width: 30px; /* Ширина кнопки */
+    height: 30px; /* Высота кнопки */
+    font-size: 20px; /* Размер шрифта для кнопки */
+    padding: 5px;
+    margin: 5px;
+}
 button:hover {
     background-color: #0074b3; /* Цвет фона кнопок при наведении */
 }

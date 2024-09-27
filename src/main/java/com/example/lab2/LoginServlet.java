@@ -5,11 +5,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.mindrot.jbcrypt.BCrypt;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -31,7 +33,8 @@ public class LoginServlet extends HttpServlet {
         System.out.println(username);
         System.out.println(password);
         try {
-            InputStream inputStream = getServletContext().getResourceAsStream("/WEB-INF/users.xml");
+            String filePath = "C:\\Users\\Денис\\IdeaProjects\\Lab2\\src\\main\\resources\\XML\\users.xml";
+            FileInputStream inputStream = new FileInputStream(filePath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(inputStream);
@@ -41,7 +44,7 @@ public class LoginServlet extends HttpServlet {
             for (int i = 0; i < users.getLength(); i++) {
                 String xmlUsername = users.item(i).getChildNodes().item(0).getTextContent();
                 String xmlPassword = users.item(i).getChildNodes().item(1).getTextContent();
-                if (xmlUsername.equals(username) && xmlPassword.equals(password)) {
+                if (xmlUsername.equals(username) && BCrypt.checkpw(password, xmlPassword)) {
                     return true;
                 }
             }
