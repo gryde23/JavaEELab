@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор категории и диапазона дат</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        select, input[type="date"], button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Выберите категорию</h2>
+    <select id="category" onchange="updateOptions()">
+        <option value="">--Выберите категорию--</option>
+        <option value="currencies">Валюты</option>
+        <option value="metals">Металлы</option>
+    </select>
+
+    <div id="options" style="display: none;">
+        <select id="sub-category">
+        </select>
+    </div>
+
+    <h3>Выберите диапазон дат</h3>
+    <input type="date" id="start-date">
+    <input type="date" id="end-date">
+
+    <button onclick="submitForm()">Enter</button>
+</div>
+
+<script>
+    function updateOptions() {
+        const category = document.getElementById('category').value;
+        const subCategory = document.getElementById('sub-category');
+        subCategory.innerHTML = ''; // Очистить предыдущие опции
+
+        if (category === 'currencies') {
+            subCategory.innerHTML += '<option value="usd">Доллар</option>';
+            subCategory.innerHTML += '<option value="eur">Евро</option>';
+        } else if (category === 'metals') {
+            subCategory.innerHTML += '<option value="gold">Золото</option>';
+            subCategory.innerHTML += '<option value="silver">Серебро</option>';
+            subCategory.innerHTML += '<option value="platinum">Платина</option>';
+            subCategory.innerHTML += '<option value="palladium">Палладий</option>';
+        }
+
+        document.getElementById('options').style.display = category ? 'block' : 'none';
+    }
+
+    async function submitForm() {
+        const category = document.getElementById('category').value;
+        const subCategory = document.getElementById('sub-category').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+
+        if (category && subCategory && startDate && endDate) {
+            const data = {
+                category: category,
+                subCategory: subCategory,
+                startDate: startDate,
+                endDate: endDate
+            };
+            fetch('http://localhost:8080/cbrf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Сеть ответила с ошибкой: ' + response.status);
+                    }
+                    return response.text(); // Если ожидается XML, используйте text()
+                })
+                .then(data => {
+                    console.log('Успех:', data);
+                    displayXML(data)
+                    // Здесь вы можете обработать полученные данные (например, отобразить их на странице)
+                })
+                .catch((error) => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка: ' + error.message);
+                });
+        } else {
+            alert('Пожалуйста, заполните все поля.');
+        }
+    }
+    function displayXML(xmlString) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        // Находим или создаем элемент для отображения
+        let outputDiv = document.getElementById("outputDiv");
+        if (!outputDiv) {
+            outputDiv = document.createElement("div");
+            outputDiv.id = "outputDiv"; // Устанавливаем ID для дальнейшего поиска
+            outputDiv.style.whiteSpace = "pre-wrap"; // Сохраняем форматирование
+            document.body.appendChild(outputDiv);
+        } else {
+            outputDiv.innerHTML = ""; // Очищаем содержимое перед добавлением нового
+        }
+        // Добавляем новое содержимое
+        outputDiv.textContent = new XMLSerializer().serializeToString(xmlDoc); // Преобразуем XML в строку
+    }
+</script>
+
+</body>
+</html>

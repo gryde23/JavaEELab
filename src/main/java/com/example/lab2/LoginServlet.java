@@ -20,6 +20,14 @@ public class LoginServlet extends HttpServlet {
     private static final int MAX_ATTEMPTS = 3;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handleLogin(req, resp);
+    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handleLogin(req, resp);
+    }
+
+    private void handleLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
@@ -44,12 +52,9 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Attempt " + attempts);
             session.setAttribute("loginAttempts", attempts);
             resp.sendRedirect("login.html?attempts=" + attempts);
-
-//            if (attempts >= MAX_ATTEMPTS) {
-//                resp.sendRedirect("index.html?message=You are blocked due to too many failed login attempts.");
-//            }
         }
     }
+
 
     private boolean validateUser(String username, String password) {
         System.out.println(username);
